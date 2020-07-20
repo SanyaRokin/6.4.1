@@ -64,7 +64,6 @@ public class Main {
             newFile3.createNewFile();
             builder.append("Create temp.txt on temp\n");
             String completedString = builder.toString();
-            System.out.println(completedString);
             FileWriter nFile = new FileWriter(newFile3);
             nFile.write(completedString);
             nFile.close();
