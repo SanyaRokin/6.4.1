@@ -3,68 +3,64 @@ package com.company;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Main {
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        createPaths();
+        createFiles();
+        log();
+    }
+    static void createPaths(){
+        List<String> paths = new ArrayList<>();
+        paths.add("D://Games");
+        paths.add("D://Games//src");
+        paths.add("D://Games//res");
+        paths.add("D://Games//savegames");
+        paths.add("D://Games//temp");
+        paths.add("D://Games//src//main");
+        paths.add("D://Games//src//test");
+        paths.add("D://Games//res//drawables");
+        paths.add("D://Games//res//vectors");
+        paths.add("D://Games//res//icons");
+        for(String path : paths) {
+            new File(path).mkdir();
+        }
+    }
+    static void createFiles() throws IOException {
+        List<String> files = new ArrayList<>();
+        files.add("D://Games//src//main//Main.java");
+        files.add("D://Games//src//main//utils.java");
+        files.add("D://Games//temp//temp.txt");
+        for(String file : files){
+            new File(file).createNewFile();
+        }
+    }
+    static void log() {
         StringBuilder builder = new StringBuilder();
-        File dir = new File("D://Games");
-        builder.append("Initial catalog Games");
-        File dir1 = new File("D://Games//src");
-        dir1.mkdir();
-        builder.append("Make src on Games");
-        File dir2 = new File("D://Games//res");
-        dir2.mkdir();
-        builder.append("Make res on Games");
-        File dir3 = new File("D://Games//savegames");
-        dir3.mkdir();
-        builder.append("Make savegames on Games");
-        File dir4 = new File("D://Games//temp");
-        dir4.mkdir();
-        builder.append("Make temp on Games");
-        File dir5 = new File("D://Games//src//main");
-        dir5.mkdir();
-        builder.append("Make src on Games//main");
-        File dir6 = new File("D://Games//src//test");
-        dir6.mkdir();
-        builder.append("Make test on src//test");
-        File newFile = new File("D://Games//src//main//Main.java");
+        try (Stream<Path> paths = Files.walk(Paths.get("D://Games//"))) {
+            paths
+                    .filter(Files::isDirectory)
+                    .forEach(builder::append);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (Stream<Path> paths = Files.walk(Paths.get("D://Games//"))) {
+            paths
+                    .filter(Files::isRegularFile)
+                    .forEach(builder::append);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try
         {
-            newFile.createNewFile();
-        }
-        catch(IOException ex){
-
-            System.out.println(ex.getMessage());
-        }
-        builder.append("Create main.java on main");
-        File newFile2 = new File("D://Games//src//main//utils.java");
-        try
-        {
-            newFile2.createNewFile();
-        }
-        catch(IOException ex){
-
-            System.out.println(ex.getMessage());
-        }
-        builder.append("Create utils.java on main");
-        File dir7 = new File("D://Games//res//drawables");
-        dir7.mkdir();
-        builder.append("Create drawables on res");
-        File dir8 = new File("D://Games//res//vectors");
-        dir8.mkdir();
-        builder.append("Create verctors on res");
-        File dir9 = new File("D://Games//res//icons");
-        dir9.mkdir();
-        builder.append("Create icons on res");
-        File newFile3 = new File("D://Games//temp//temp.txt");
-        try
-        {
-            newFile3.createNewFile();
-            builder.append("Create temp.txt on temp\n");
-            String completedString = builder.toString();
-            FileWriter nFile = new FileWriter(newFile3);
-            nFile.write(completedString + "\n");
+            FileWriter nFile = new FileWriter("D://Games//temp//temp.txt");
+            nFile.write(builder +"\n");
             nFile.close();
         }
         catch(IOException ex){
@@ -73,3 +69,4 @@ public class Main {
         }
     }
 }
+
